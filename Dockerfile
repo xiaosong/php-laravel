@@ -2,11 +2,8 @@ FROM php:7-fpm-alpine
 
 MAINTAINER i@llm.me
 
-ARG 1000
-ARG 1000
-
-ENV UID=${UID}
-ENV GID=${GID}
+ENV UID=1000
+ENV GID=1000
 
 RUN mkdir -p /var/www/html
 
