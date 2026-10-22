@@ -1,2 +1,2 @@
 # php-laravel
-php7-fpm for laravel with gd pdo pdo\_mysql redis
+php8.5-fpm for laravel with gd pdo pdo\_mysql redis

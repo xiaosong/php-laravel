@@ -1,5 +1,5 @@
 # Base image
-FROM php:7-fpm-alpine AS base
+FROM php:8.5-fpm-alpine AS base
 
 RUN apk update --no-cache && \
     apk upgrade --no-cache
@@ -78,7 +78,8 @@ RUN apk add --no-cache \
 #####################################
 # Copy extensions from build stage
 #####################################
-COPY --from=build /usr/local/lib/php/extensions/no-debug-non-zts-20190902/* /usr/local/lib/php/extensions/no-debug-non-zts-20190902
+# Whole tree, not the "no-debug-non-zts-<apino>" subdir: that name changes with every PHP version.
+COPY --from=build /usr/local/lib/php/extensions/ /usr/local/lib/php/extensions/
 COPY --from=build /usr/local/etc/php/conf.d/* /usr/local/etc/php/conf.d
 
 #####################################
