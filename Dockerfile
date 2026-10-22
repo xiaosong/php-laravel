@@ -19,6 +19,9 @@ RUN apk add --no-cache \
 # PHP Extensions
 #####################################
 
+# Install for arbitrary-precision arithmetic
+RUN docker-php-ext-install bcmath
+
 # Install for image manipulation
 RUN docker-php-ext-install exif
 
