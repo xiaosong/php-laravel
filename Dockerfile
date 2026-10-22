@@ -29,8 +29,7 @@ RUN docker-php-ext-configure gd \
     --with-webp
 RUN docker-php-ext-install gd
 
-# Install the PHP opcache extention
-RUN docker-php-ext-enable opcache
+# PHP 8.5+ builds opcache statically and always loads it, so there is no opcache.so to enable.
 
 # Install the PHP pdo_mysql extention
 RUN docker-php-ext-install pdo_mysql
