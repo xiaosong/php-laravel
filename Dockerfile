@@ -48,6 +48,7 @@ FROM base AS target
 
 ENV UID=1000
 ENV GID=1000
+ENV TZ=Asia/Shanghai
 
 RUN mkdir -p /var/www/html
 
@@ -75,7 +76,8 @@ RUN apk add --no-cache \
     freetype \
     libjpeg-turbo \
     libwebp \
-    libzip
+    libzip \
+    tzdata
 
 #####################################
 # Copy extensions from build stage
@@ -83,6 +85,12 @@ RUN apk add --no-cache \
 # Whole tree, not the "no-debug-non-zts-<apino>" subdir: that name changes with every PHP version.
 COPY --from=build /usr/local/lib/php/extensions/ /usr/local/lib/php/extensions/
 COPY --from=build /usr/local/etc/php/conf.d/* /usr/local/etc/php/conf.d
+
+#####################################
+# Timezone
+#####################################
+# PHP prefers date.timezone over TZ, so both are set to keep PHP and the OS clock in step.
+RUN echo "date.timezone = ${TZ}" > /usr/local/etc/php/conf.d/timezone.ini
 
 #####################################
 # Cleanup
