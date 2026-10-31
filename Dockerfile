@@ -64,6 +64,8 @@ RUN adduser -G laravel --system -D -s /bin/sh -u ${UID} laravel
 
 # Errors go to stderr so Docker's log driver collects them: /var/log is root-owned
 # and the container runs as laravel, so a file there could never be opened.
+# access.format overrides fpm's default %R, which is the socket peer (the reverse
+# proxy), not the client. Single quotes: the shell must not eat the \" escapes.
 RUN sed -i "s/pm.max_children = 5/pm.max_children = 15/g" /usr/local/etc/php-fpm.d/www.conf && \
     sed -i "s/pm.max_spare_servers = 3/pm.max_spare_servers = 6/g" /usr/local/etc/php-fpm.d/www.conf && \
     sed -i "s/user = www-data/user = laravel/g" /usr/local/etc/php-fpm.d/www.conf && \
@@ -71,7 +73,8 @@ RUN sed -i "s/pm.max_children = 5/pm.max_children = 15/g" /usr/local/etc/php-fpm
     echo "php_admin_flag[log_errors] = on" >> /usr/local/etc/php-fpm.d/www.conf && \
     echo "php_admin_flag[display_errors] = off" >> /usr/local/etc/php-fpm.d/www.conf && \
     echo "php_admin_flag[display_startup_errors] = off" >> /usr/local/etc/php-fpm.d/www.conf && \
-    echo "php_admin_value[error_log] = /proc/self/fd/2" >> /usr/local/etc/php-fpm.d/www.conf
+    echo "php_admin_value[error_log] = /proc/self/fd/2" >> /usr/local/etc/php-fpm.d/www.conf && \
+    echo 'access.format = "%{REMOTE_ADDR}e - %u %t \"%m %r\" %s"' >> /usr/local/etc/php-fpm.d/www.conf
 
 #####################################
 # Install necessary libraries
